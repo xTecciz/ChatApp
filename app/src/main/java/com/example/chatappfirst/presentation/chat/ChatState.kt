@@ -5,5 +5,4 @@ import com.example.chatappfirst.domain.model.MessageModel
 data class ChatState(
     val messages: List<MessageModel> = emptyList(),
     val isLoading: Boolean = false
-) {
-}
+)

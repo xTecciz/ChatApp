@@ -6,7 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -123,6 +129,17 @@ fun ChatScreen(
                     }
                 }
             }
+        }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            TextField(modifier = Modifier.weight(1f),
+                value = viewModel.messageText.value,
+                onValueChange = viewModel::onMessageChange,
+                placeholder = { Text(text = "Enter a message") }
+            )
+            IconButton(onClick = viewModel::sendMessage) {
+                Icon(imageVector = Icons.Default.Send, contentDescription = "Send message")
+            }
+
         }
     }
 }

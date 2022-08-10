@@ -33,8 +33,7 @@ class ChatViewModel(
         getAllMessages()
         savedStateHandle.get<String>("username")?.let { username ->
             viewModelScope.launch {
-                val result = chatSocketService.initSession(username)
-                when (result) {
+                when (chatSocketService.initSession(username)) {
                     is Resource.Success -> {
                         chatSocketService.observeMessages().onEach { message ->
                             val newList = state.value.messages.toMutableList().apply {
@@ -61,7 +60,7 @@ class ChatViewModel(
         }
     }
 
-    fun getAllMessages() {
+    private fun getAllMessages() {
         viewModelScope.launch {
             _state.value = state.value.copy(isLoading = true)
             val result = messageService.getAllMessage()
