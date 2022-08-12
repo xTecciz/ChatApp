@@ -9,11 +9,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.chatappfirst.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun UsernameScreen(
+    navHostController: NavHostController,
     onNavigate: (String) -> Unit
 ) {
     val viewModel = getViewModel<UsernameViewModel>()
@@ -45,7 +48,8 @@ fun UsernameScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { viewModel::onJoinClick }) {
+            Button(onClick = viewModel::onJoinClick
+            ) {
                 Text(text = "Join")
             }
         }

@@ -14,7 +14,13 @@ data class MessageDto(
 ) {
     fun toMessageModel(): MessageModel {
         val date = Date(timestamp)
-        val formattedDate = DateFormat.getDateInstance(DateFormat.DEFAULT).format(date)
-        return MessageModel(text = text, date = formattedDate, username = username)
+        val formattedDate = DateFormat
+            .getDateInstance(DateFormat.DEFAULT)
+            .format(date)
+        return MessageModel(
+            text = text,
+            date = formattedDate,
+            username = username
+        )
     }
 }

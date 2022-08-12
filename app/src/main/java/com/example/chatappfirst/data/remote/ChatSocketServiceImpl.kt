@@ -13,7 +13,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class ChatSocketServiceImpl(private val client: HttpClient) : ChatSocketService {
+class ChatSocketServiceImpl(
+    private val client: HttpClient
+) : ChatSocketService {
     private var socket: WebSocketSession? = null
 
     override suspend fun initSession(username: String): Resource<Unit> {
@@ -39,11 +41,14 @@ class ChatSocketServiceImpl(private val client: HttpClient) : ChatSocketService 
 
     override fun observeMessages(): Flow<MessageModel> {
         return try {
-            socket?.incoming?.receiveAsFlow()?.filter { it is Frame.Text }?.map {
-                val json = (it as? Frame.Text)?.readText() ?: ""
-                val messageDto = Json.decodeFromString<MessageDto>(json)
-                messageDto.toMessageModel()
-            } ?: flow { }
+            socket?.incoming
+                ?.receiveAsFlow()
+                ?.filter { it is Frame.Text }
+                ?.map {
+                    val json = (it as? Frame.Text)?.readText() ?: ""
+                    val messageDto = Json.decodeFromString<MessageDto>(json)
+                    messageDto.toMessageModel()
+                } ?: flow { }
         } catch (e: Exception) {
             e.printStackTrace()
             flow {}

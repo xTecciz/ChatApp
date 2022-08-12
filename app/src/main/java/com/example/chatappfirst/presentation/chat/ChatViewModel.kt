@@ -7,17 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatappfirst.data.remote.ChatSocketService
 import com.example.chatappfirst.data.remote.MessageService
+import com.example.chatappfirst.util.CHAT_ARGUMENT_KEY
 import com.example.chatappfirst.util.Resource
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val messageService: MessageService,
-    private val chatSocketService: ChatSocketService,
-    private val savedStateHandle: SavedStateHandle
+    private val chatSocketService: ChatSocketService
 ) : ViewModel() {
 
     private val _messageText = mutableStateOf("")
@@ -29,22 +27,35 @@ class ChatViewModel(
     private val _toastEvent = MutableSharedFlow<String>()
     val toastEvent = _toastEvent.asSharedFlow()
 
+    private val _currentName: MutableStateFlow<String?> = MutableStateFlow("")
+    val currentName: StateFlow<String?> = _currentName
+
+    init {
+        viewModelScope.launch {
+            val currentName = savedStateHandle.get<String>(CHAT_ARGUMENT_KEY)
+            _currentName.value = currentName
+        }
+    }
+
     fun connectToChat() {
         getAllMessages()
-        savedStateHandle.get<String>("username")?.let { username ->
+        savedStateHandle.get<String>(CHAT_ARGUMENT_KEY)?.let { username ->
             viewModelScope.launch {
-                when (chatSocketService.initSession(username)) {
+                when (val result = chatSocketService.initSession(username)) {
                     is Resource.Success -> {
-                        chatSocketService.observeMessages().onEach { message ->
-                            val newList = state.value.messages.toMutableList().apply {
-                                add(0, message)
-                            }
-                            _state.value = state.value.copy(
-                                messages = newList
-                            )
-                        }.launchIn(viewModelScope)
+                        chatSocketService.observeMessages()
+                            .onEach { message ->
+                                val newList = state.value.messages.toMutableList().apply {
+                                    add(0, message)
+                                }
+                                _state.value = state.value.copy(
+                                    messages = newList
+                                )
+                            }.launchIn(viewModelScope)
                     }
-                    is Resource.Error -> {}
+                    is Resource.Error -> {
+                        _toastEvent.emit(result.message ?: "Unknown error")
+                    }
                 }
             }
         }

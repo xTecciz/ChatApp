@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
-class UsernameViewModel : ViewModel() {
+
+class UsernameViewModel: ViewModel() {
 
     private val _usernameText = mutableStateOf("")
     val usernameText: State<String> = _usernameText

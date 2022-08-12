@@ -17,15 +17,20 @@ fun SetupNavGraph(navHostController: NavHostController) {
         startDestination = Screen.Username.route
     ) {
         composable(route = Screen.Username.route) {
-            UsernameScreen(onNavigate =)
+            UsernameScreen(
+                navHostController = navHostController,
+                onNavigate = navHostController::navigate
+            )
         }
         composable(
             route = Screen.Chat.route,
             arguments = listOf(navArgument(CHAT_ARGUMENT_KEY) {
                 type = NavType.StringType
+                nullable = true
             })
         ) {
-            ChatScreen(username =)
+            val username = it.arguments?.getString(CHAT_ARGUMENT_KEY)
+            ChatScreen(navHostController = navHostController)
         }
     }
 }

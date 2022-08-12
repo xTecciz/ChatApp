@@ -11,7 +11,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -27,12 +26,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ChatScreen(
-    username: String?
+    navHostController: NavHostController
 ) {
     val viewModel = getViewModel<ChatViewModel>()
     val context = LocalContext.current
@@ -71,7 +71,7 @@ fun ChatScreen(
                 Spacer(modifier = Modifier.height(32.dp))
             }
             items(state.messages) { message ->
-                val isOwnMessage = message.username == username
+                val isOwnMessage = message.username == viewModel.currentName.value
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = if (isOwnMessage) Alignment.CenterEnd
@@ -128,6 +128,7 @@ fun ChatScreen(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
         Row(modifier = Modifier.fillMaxWidth()) {
