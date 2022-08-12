@@ -1,4 +1,4 @@
-package com.example.chatappfirst.navigation
+package com.example.chatappfirst.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

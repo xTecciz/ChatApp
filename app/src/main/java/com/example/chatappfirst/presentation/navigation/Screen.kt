@@ -1,4 +1,4 @@
-package com.example.chatappfirst.navigation
+package com.example.chatappfirst.presentation.navigation
 
 sealed class Screen(val route: String) {
     object Username : Screen("username_screen")
