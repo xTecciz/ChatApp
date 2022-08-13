@@ -9,20 +9,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.chatappfirst.presentation.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun UsernameScreen(
     navHostController: NavHostController,
-    onNavigate: (String) -> Unit
+    viewModel: UsernameViewModel = hiltViewModel()
 ) {
-    val viewModel = getViewModel<UsernameViewModel>()
+    //val viewModel = getViewModel<UsernameViewModel>()
 
     LaunchedEffect(key1 = true) {
         viewModel.onJoinChat.collectLatest { username ->
-            onNavigate("chat_screen/$username")
+            navHostController.navigate(Screen.Chat.passUsername(username))
         }
     }
 
@@ -47,7 +49,8 @@ fun UsernameScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = viewModel::onJoinClick
+            Button(
+                onClick = viewModel::onJoinClick
             ) {
                 Text(text = "Join")
             }

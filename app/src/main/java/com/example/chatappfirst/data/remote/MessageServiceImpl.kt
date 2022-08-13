@@ -7,7 +7,6 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 
-
 class MessageServiceImpl(private val client: HttpClient) : MessageService {
 
     override suspend fun getAllMessage(): List<MessageModel> {
@@ -15,11 +14,8 @@ class MessageServiceImpl(private val client: HttpClient) : MessageService {
             client.get(EndPoints.GetAllMessages.url).body<List<MessageDto>>().map {
                 it.toMessageModel()
             }
-
-//            client.get<List<MessageDto>>(EndPoints.GetAllMessages.url).map {
-//                it.toMessageModel()
-//            }
         } catch (e: Exception) {
+            e.printStackTrace()
             emptyList()
         }
     }

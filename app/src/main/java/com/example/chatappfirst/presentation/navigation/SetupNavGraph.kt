@@ -18,8 +18,7 @@ fun SetupNavGraph(navHostController: NavHostController) {
     ) {
         composable(route = Screen.Username.route) {
             UsernameScreen(
-                navHostController = navHostController,
-                onNavigate = navHostController::navigate
+                navHostController = navHostController
             )
         }
         composable(
@@ -30,7 +29,7 @@ fun SetupNavGraph(navHostController: NavHostController) {
             })
         ) {
             val username = it.arguments?.getString(CHAT_ARGUMENT_KEY)
-            ChatScreen(navHostController = navHostController)
+            ChatScreen(username)
         }
     }
 }

@@ -24,20 +24,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ChatScreen(
-    navHostController: NavHostController
+    username: String?,
+    viewModel: ChatViewModel = hiltViewModel()
 ) {
-    val viewModel = getViewModel<ChatViewModel>()
+    //val viewModel = getViewModel<ChatViewModel>()
     val context = LocalContext.current
-    val state = viewModel.state.value
     val lifecycleOwner = LocalLifecycleOwner.current
+    val state = viewModel.state.value
 
     LaunchedEffect(key1 = true) {
         viewModel.toastEvent.collectLatest { message ->
@@ -71,7 +72,7 @@ fun ChatScreen(
                 Spacer(modifier = Modifier.height(32.dp))
             }
             items(state.messages) { message ->
-                val isOwnMessage = message.username == viewModel.currentName.value
+                val isOwnMessage = message.username == username
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = if (isOwnMessage) Alignment.CenterEnd

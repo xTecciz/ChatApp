@@ -1,5 +1,6 @@
 package com.example.chatappfirst.data.remote
 
+import android.util.Log
 import com.example.chatappfirst.data.remote.dto.MessageDto
 import com.example.chatappfirst.data.remote.util.EndPoints
 import com.example.chatappfirst.domain.model.MessageModel
@@ -51,7 +52,7 @@ class ChatSocketServiceImpl(
                 } ?: flow { }
         } catch (e: Exception) {
             e.printStackTrace()
-            flow {}
+            flow { }
         }
     }
 
